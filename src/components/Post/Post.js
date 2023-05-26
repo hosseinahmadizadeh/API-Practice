@@ -4,7 +4,7 @@ import "./Post.css";
 
 const post = (props) => (
   <article className="post" onClick={props.click}>
-    <h1>Title</h1>
+    <h1>{props.title}</h1>
     <div>
       <div className="author">Author</div>
     </div>
