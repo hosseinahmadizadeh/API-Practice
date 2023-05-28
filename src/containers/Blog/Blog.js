@@ -10,19 +10,25 @@ class Blog extends React.Component {
   state = {
     posts: [],
     selectedPostId: null,
+    error: false,
   };
 
   componentDidMount() {
-    axios.get("https://jsonplaceholder.typicode.com/posts").then((response) => {
-      const posts = response.data.slice(0, 4);
-      const updatedPosts = posts.map((item) => {
-        return {
-          ...item,
-          author: "Hossein",
-        };
+    axios
+      .get("https://jsonplaceholder.typicode.com/posts")
+      .then((response) => {
+        const posts = response.data.slice(0, 4);
+        const updatedPosts = posts.map((item) => {
+          return {
+            ...item,
+            author: "Hossein",
+          };
+        });
+        this.setState({ posts: updatedPosts });
+      })
+      .catch((err) => {
+        this.setState({ error: true });
       });
-      this.setState({ posts: updatedPosts });
-    });
   }
 
   selectPostHandler(id) {
@@ -30,16 +36,20 @@ class Blog extends React.Component {
   }
 
   render() {
-    const posts = this.state.posts.map((item) => {
-      return (
-        <Post
-          key={item.id}
-          title={item.title}
-          author={item.author}
-          click={() => this.selectPostHandler(item.id)}
-        />
-      );
-    });
+    let posts = <p style={{ textAlign: "center" }}>Fetching data failed!</p>;
+    if (!this.state.error) {
+      posts = this.state.posts.map((item) => {
+        return (
+          <Post
+            key={item.id}
+            title={item.title}
+            author={item.author}
+            click={() => this.selectPostHandler(item.id)}
+          />
+        );
+      });
+    }
+
     return (
       <div>
         <section className="posts">{posts}</section>
